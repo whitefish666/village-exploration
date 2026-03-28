@@ -20,9 +20,12 @@ Page({
       y: 300,
       direction: 'down',
       speed: 3,
-      frameIndex: 0,
+      frameIndex: 1,
       animationTimer: 0
     },
+
+    // 玩家图片路径
+    playerImage: '/assets/主角走动/前/1.png',
 
     // NPC列表
     npcs: [],
@@ -47,6 +50,15 @@ Page({
     targetX: 0,
     targetY: 0,
     showTarget: false,
+
+    // 遥控杆相关
+    joystickVisible: true,
+    joystickActive: false,
+    joystickDirection: null,
+    joystickOffsetX: 0,
+    joystickOffsetY: 0,
+    joystickCenterX: 80,
+    joystickCenterY: 580,
 
     // 触摸相关
     touchStartX: 0,
@@ -121,6 +133,8 @@ Page({
     if (this.data.animationFrame) {
       clearInterval(this.data.animationFrame)
     }
+    // 隐藏遥控杆
+    this.setData({ joystickVisible: false })
   },
 
   onShow() {
@@ -129,7 +143,8 @@ Page({
     this.setData({
       inventory: savedData.inventory || [],
       tasks: savedData.tasks || this.data.tasks,
-      wheatCollected: savedData.tasks.wheatCollected || false
+      wheatCollected: savedData.tasks.wheatCollected || false,
+      joystickVisible: true
     })
     // 重新启动游戏循环
     this.startGameLoop()
@@ -155,10 +170,15 @@ Page({
       this.movePlayer()
       this.checkNpcProximity()
       this.updateAnimation()
+    } else if (this.data.joystickActive) {
+      // 遥控杆控制移动
+      this.updatePlayerByJoystick()
+      this.checkNpcProximity()
+      this.updateAnimation()
     } else {
       // 站立时重置为0帧
-      if (this.data.player.frameIndex !== 0) {
-        this.setData({ 'player.frameIndex': 0 })
+      if (this.data.player.frameIndex !== 1) {
+        this.setData({ 'player.frameIndex': 1 })
       }
     }
     this.updateCamera()
@@ -181,22 +201,49 @@ Page({
 
   // 更新走路动画
   updateAnimation() {
-    let { frameIndex, isMoving, animationTimer } = this.data.player
-    animationTimer++
+    const { player, joystickActive, isMoving } = this.data
 
-    if (isMoving) {
-      // 每3帧更新一次动画（约20fps），避免太频繁
-      if (animationTimer >= 3) {
+    if (isMoving || joystickActive) {
+      // 增加animationTimer
+      let animationTimer = (player.animationTimer || 0) + 1
+      let frameIndex = player.frameIndex || 1
+      const direction = player.direction
+
+      // 每4帧更新一次动画（约15fps），减少setData调用
+      if (animationTimer >= 4) {
         animationTimer = 0
-        frameIndex = (frameIndex % 6) + 1
+        // 根据方向获取最大帧数
+        const maxFrames = (direction === 'left' || direction === 'right') ? 6 : 2
+        frameIndex = (frameIndex % maxFrames) + 1
+        // 更新图片路径
+        this.updatePlayerImage(direction, frameIndex)
       }
-    } else {
-      frameIndex = 0
-      animationTimer = 0
+
+      // 保存animationTimer和frameIndex
+      this.setData({
+        'player.animationTimer': animationTimer,
+        'player.frameIndex': frameIndex
+      })
+    } else if (player.frameIndex !== 1) {
+      // 站立时只重置帧索引
+      this.setData({
+        'player.frameIndex': 1,
+        'player.animationTimer': 0
+      })
     }
+  },
+
+  // 更新玩家图片路径
+  updatePlayerImage(direction, frameIndex) {
+    const dirMap = {
+      'up': '后',
+      'down': '前',
+      'left': '左',
+      'right': '右'
+    }
+    const folder = dirMap[direction] || '前'
     this.setData({
-      'player.frameIndex': frameIndex,
-      'player.animationTimer': animationTimer
+      playerImage: `/assets/主角走动/${folder}/${frameIndex}.png`
     })
   },
 
@@ -236,6 +283,11 @@ Page({
       newX = Math.max(bounds.minX, Math.min(bounds.maxX, newX))
       newY = Math.max(bounds.minY, Math.min(bounds.maxY, newY))
 
+      // 如果方向改变，更新图片
+      if (direction !== player.direction) {
+        this.updatePlayerImage(direction, player.frameIndex)
+      }
+
       this.setData({
         'player.x': newX,
         'player.y': newY,
@@ -251,6 +303,20 @@ Page({
     } else {
       return vy > 0 ? 'down' : 'up'
     }
+  },
+
+  // 获取主角图片路径
+  getPlayerImage() {
+    const { direction, frameIndex } = this.data.player
+    // 方向映射：代码方向 -> 文件夹名
+    const dirMap = {
+      'up': '后',
+      'down': '前',
+      'left': '左',
+      'right': '右'
+    }
+    const folder = dirMap[direction] || '前'
+    return `/assets/主角走动/${folder}/${frameIndex}.png`
   },
 
   // 触摸开始
@@ -273,6 +339,117 @@ Page({
   // 点击粘土堆
   onClayPileTap() {
     wx.navigateTo({ url: '/pages/minigame/clay/clay' })
+  },
+
+  // 遥控杆开始触摸
+  onJoystickStart(e) {
+    const touch = e.touches[0]
+    this.data.joystickActive = true
+    this.updateJoystickPosition(touch.clientX, touch.clientY)
+  },
+
+  // 遥控杆移动
+  onJoystickMove(e) {
+    if (!this.data.joystickActive) return
+    const touch = e.touches[0]
+    this.updateJoystickPosition(touch.clientX, touch.clientY)
+  },
+
+  // 遥控杆释放
+  onJoystickEnd(e) {
+    this.data.joystickActive = false
+    this.data.joystickDirection = null
+    this.setData({
+      joystickOffsetX: 0,
+      joystickOffsetY: 0
+    })
+  },
+
+  // 更新遥控杆位置
+  updateJoystickPosition(clientX, clientY) {
+    const { joystickCenterX, joystickCenterY } = this.data
+    const maxDistance = 40  // 最大偏移距离
+
+    let dx = clientX - joystickCenterX
+    let dy = clientY - joystickCenterY
+    const distance = Math.sqrt(dx * dx + dy * dy)
+
+    // 限制最大偏移
+    if (distance > maxDistance) {
+      dx = (dx / distance) * maxDistance
+      dy = (dy / distance) * maxDistance
+    }
+
+    // 判断方向 - 简化为8方向
+    let direction = null
+    if (distance > 15) {
+      const absDx = Math.abs(dx)
+      const absDy = Math.abs(dy)
+      if (absDx > absDy * 1.5) {
+        // 水平方向为主
+        direction = dx > 0 ? 'right' : 'left'
+      } else if (absDy > absDx * 1.5) {
+        // 垂直方向为主
+        direction = dy > 0 ? 'down' : 'up'
+      } else {
+        // 对角方向 - 取水平方向
+        direction = dx > 0 ? 'right' : 'left'
+      }
+    }
+
+    this.setData({
+      joystickOffsetX: dx,
+      joystickOffsetY: dy,
+      joystickDirection: direction
+    })
+  },
+
+  // 根据遥控杆方向更新玩家位置
+  updatePlayerByJoystick() {
+    const { joystickDirection, player, bounds } = this.data
+    if (!joystickDirection) return
+
+    const speed = player.speed
+    let newX = player.x
+    let newY = player.y
+    let newDirection = player.direction
+    let needUpdateImage = false
+
+    switch (joystickDirection) {
+      case 'up':
+        newY -= speed
+        if (newDirection !== 'up') { newDirection = 'up'; needUpdateImage = true }
+        break
+      case 'down':
+        newY += speed
+        if (newDirection !== 'down') { newDirection = 'down'; needUpdateImage = true }
+        break
+      case 'left':
+        newX -= speed
+        if (newDirection !== 'left') { newDirection = 'left'; needUpdateImage = true }
+        break
+      case 'right':
+        newX += speed
+        if (newDirection !== 'right') { newDirection = 'right'; needUpdateImage = true }
+        break
+    }
+
+    // 边界检测
+    newX = Math.max(bounds.minX, Math.min(bounds.maxX, newX))
+    newY = Math.max(bounds.minY, Math.min(bounds.maxY, newY))
+
+    const dataToUpdate = {
+      'player.x': newX,
+      'player.y': newY,
+      'player.direction': newDirection
+    }
+
+    // 只有方向改变时才更新图片
+    if (needUpdateImage) {
+      this.updatePlayerImage(newDirection, player.frameIndex)
+    }
+
+    this.setData(dataToUpdate)
   },
 
   // 触摸结束 - 点击地图移动
@@ -434,13 +611,22 @@ Page({
     }
 
     // 检查麦堆交互
-    const { wheatPile } = this.data
+    const { wheatPile, clayPile } = this.data
     const wheatDx = wheatPile.x - player.x
     const wheatDy = wheatPile.y - player.y
     const wheatDistance = Math.sqrt(wheatDx * wheatDx + wheatDy * wheatDy)
 
     if (wheatDistance < interactDistance) {
       wx.navigateTo({ url: '/pages/minigame/wheat/wheat' })
+    }
+
+    // 检查粘土堆交互
+    const clayDx = clayPile.x - player.x
+    const clayDy = clayPile.y - player.y
+    const clayDistance = Math.sqrt(clayDx * clayDx + clayDy * clayDy)
+
+    if (clayDistance < interactDistance) {
+      wx.navigateTo({ url: '/pages/minigame/clay/clay' })
     }
   },
 

@@ -5,13 +5,14 @@ Page({
   data: {
     stones: [],       // 石块列表
     caught: 0,        // 已收集
-    basinX: 150,      // 盆的位置
+    basinX: 0,      // 盆的位置（横屏模式）
+    basinWidth: 250,  // 盆的宽度（固定250px）
     timeLeft: 15,     // 剩余时间
     gameEnded: false, // 游戏结束
     allCaught: false,  // 全部收集
     timer: null,
     gameLoopTimer: null,
-    canvasWidth: 320,
+    canvasWidth: 390,  // 游戏区域宽度（横屏屏幕）
     canvasHeight: 500
   },
 
@@ -34,7 +35,7 @@ Page({
     for (let i = 0; i < 10; i++) {
       stones.push({
         id: i,
-        x: Math.random() * 260 + 30,  // 随机X
+        x: Math.random() * 350 + 20,  // 随机X（屏幕宽度内）
         y: -20 - Math.random() * 200, // 初始在屏幕上方
         speed: 2 + Math.random() * 2,  // 随机速度
         caught: false
@@ -47,7 +48,7 @@ Page({
       timeLeft: 15,
       gameEnded: false,
       allCaught: false,
-      basinX: 120
+      basinX: (390 - 250) / 2  // 盆初始居中
     })
 
     // 启动计时器
@@ -74,9 +75,8 @@ Page({
   updateStones() {
     if (this.data.gameEnded) return
 
-    const { stones, basinX, canvasWidth } = this.data
-    const basinWidth = 80
-    const basinY = 480  // 盆的Y位置
+    const { stones, basinX, basinWidth, canvasWidth } = this.data
+    const basinY = 680  // 盆的Y位置（靠近底部）
     let caught = this.data.caught
     let allCaught = true
 
@@ -87,19 +87,29 @@ Page({
       // 移动石块
       stone.y += stone.speed
 
-      // 检测碰撞（盆的范围内）
-      if (stone.y >= basinY - 20 && stone.y <= basinY + 30) {
-        if (stone.x >= basinX - 10 && stone.x <= basinX + basinWidth + 10) {
+      // 石块大小（300%放大后36px）
+      const stoneSize = 36
+
+      // 检测碰撞：石块必须掉落在盆的范围内才算接住
+      // 盆的Y位置是680，盆高度125px
+      // 石块的底部(y + stoneSize)必须在盆的范围内才算接住
+      const stoneBottom = stone.y + stoneSize
+      const basinTop = basinY - 50  // 盆的顶部区域
+      const basinBottom = basinY + 70  // 盆的底部区域
+
+      if (stoneBottom >= basinTop && stoneBottom <= basinBottom) {
+        // 石块必须在盆的水平范围内
+        if (stone.x >= basinX && stone.x + stoneSize <= basinX + basinWidth) {
           stone.caught = true
           caught++
           continue
         }
       }
 
-      // 超出屏幕
-      if (stone.y > 520) {
+      // 超出屏幕底部
+      if (stone.y > 780) {
         stone.y = -20
-        stone.x = Math.random() * 260 + 30
+        stone.x = Math.random() * (canvasWidth - 40) + 20
       }
     }
 
@@ -132,18 +142,13 @@ Page({
   },
 
   updateBasin(clientX) {
-    // 将屏幕坐标转换为游戏坐标
-    // 游戏区域是320px宽，屏幕是390px宽，居中时左边距是35px
-    const screenWidth = 390
-    const gameWidth = this.data.canvasWidth
-    const offsetX = (screenWidth - gameWidth) / 2
+    const { canvasWidth, basinWidth } = this.data
 
-    // 盆的宽度是80px，半宽是40
-    const basinHalfWidth = 40
-    let x = clientX - offsetX - basinHalfWidth
+    // 直接使用屏幕坐标，盆的宽度是屏幕的1/4
+    let x = clientX - basinWidth / 2
 
-    // 边界限制
-    x = Math.max(0, Math.min(gameWidth - 80, x))
+    // 边界限制（盆不能超出屏幕）
+    x = Math.max(0, Math.min(canvasWidth - basinWidth, x))
     this.setData({ basinX: x })
   },
 

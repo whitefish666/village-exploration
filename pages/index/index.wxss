@@ -312,3 +312,36 @@
   color: #999;
   font-size: 24rpx;
 }
+
+/* 遥控杆 */
+.joystick {
+  position: fixed;
+  left: 30px;
+  bottom: 120px;
+  width: 160px;
+  height: 160px;
+  z-index: 1000;
+}
+
+.joystick-base {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  background-color: rgba(139, 69, 19, 0.4);
+  border-radius: 50%;
+  border: 3px solid rgba(139, 69, 19, 0.6);
+}
+
+.joystick-knob {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background-color: rgba(139, 69, 19, 0.8);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin-left: -30px;
+  margin-top: -30px;
+  transition: transform 0.05s linear;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}

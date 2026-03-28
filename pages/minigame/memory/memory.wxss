@@ -70,7 +70,8 @@
 }
 
 .pattern-icon {
-  font-size: 60rpx;
+  width: 180rpx;
+  height: 180rpx;
 }
 
 .status-area {

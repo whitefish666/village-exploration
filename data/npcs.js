@@ -42,7 +42,7 @@ module.exports = {
       ],
       trigger: 'click',
       task: null,
-      avatar: null
+      avatar: '/assets/竹编.png'
     },
     {
       id: 'ma_bing',

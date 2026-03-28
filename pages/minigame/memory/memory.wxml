@@ -8,7 +8,7 @@
   <view class="game-area">
     <view class="pattern-grid">
       <view wx:for="{{patterns}}" wx:key="index" class="pattern-item {{item.active ? 'active' : ''}} {{item.matched ? 'matched' : ''}}" bindtap="onPatternTap" data-index="{{index}}">
-        <text class="pattern-icon">{{item.icon}}</text>
+        <image class="pattern-icon" src="{{item.icon}}" mode="aspectFit"></image>
       </view>
     </view>
 

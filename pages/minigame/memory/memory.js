@@ -4,9 +4,9 @@ const gameData = require('../../../utils/gameData.js')
 Page({
   data: {
     patterns: [
-      { id: 0, icon: '🔴', active: false, matched: false },
-      { id: 1, icon: '🔺', active: false, matched: false },
-      { id: 2, icon: '🔷', active: false, matched: false }
+      { id: 0, icon: '/assets/戏曲/上.png', active: false, matched: false },
+      { id: 1, icon: '/assets/戏曲/中.png', active: false, matched: false },
+      { id: 2, icon: '/assets/戏曲/下.png', active: false, matched: false }
     ],
     gameState: 'idle', // idle, showing, input, ended
     sequence: [],
@@ -26,9 +26,9 @@ Page({
   resetGame() {
     this.setData({
       patterns: [
-        { id: 0, icon: '🔴', active: false, matched: false },
-        { id: 1, icon: '🔺', active: false, matched: false },
-        { id: 2, icon: '🔷', active: false, matched: false }
+        { id: 0, icon: '/assets/戏曲/上.png', active: false, matched: false },
+        { id: 1, icon: '/assets/戏曲/中.png', active: false, matched: false },
+        { id: 2, icon: '/assets/戏曲/下.png', active: false, matched: false }
       ],
       gameState: 'idle',
       sequence: [],
@@ -44,10 +44,14 @@ Page({
     this.resetGame()
     this.setData({ gameState: 'showing' })
 
-    // 生成随机序列
-    const sequence = []
-    for (let i = 0; i < this.data.totalPatterns; i++) {
-      sequence.push(Math.floor(Math.random() * 3))
+    // 生成随机序列（每个图案只出现一次）
+    const sequence = [0, 1, 2]
+    // 洗牌算法 Fisher-Yates
+    for (let i = sequence.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      const temp = sequence[i]
+      sequence[i] = sequence[j]
+      sequence[j] = temp
     }
 
     this.setData({ sequence })
