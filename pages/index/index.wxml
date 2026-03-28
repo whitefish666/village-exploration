@@ -1,0 +1,61 @@
+<!-- 主页面：2D俯视角地图 -->
+<view class="container">
+  <!-- 游戏地图区域 -->
+  <view class="game-map" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd">
+    <!-- 地图背景 -->
+    <view class="map-background" style="transform: translate(-{{camera.x}}px, -{{camera.y}}px);">
+      <!-- 地面背景图片 - 尺寸为世界尺寸 -->
+      <image class="ground" src="/assets/map.png" mode="aspectFill"
+        style="width: {{mapSize.width}}px; height: {{mapSize.height}}px;"></image>
+      <!-- 麦堆 -->
+      <view class="wheat-pile {{wheatCollected ? 'collected' : ''}}" style="left: {{wheatPile.x}}px; top: {{wheatPile.y}}px;" catchtap="onWheatPileTap">
+        <text class="wheat-emoji">🌾</text>
+      </view>
+      <!-- 粘土堆 -->
+      <view class="clay-pile" style="left: {{clayPile.x}}px; top: {{clayPile.y}}px;" catchtap="onClayPileTap">
+        <text class="clay-emoji">🪨</text>
+      </view>
+    </view>
+
+    <!-- NPC列表 -->
+    <view class="npcs-layer">
+      <view wx:for="{{npcs}}" wx:key="id" class="npc-wrapper" style="left: {{item.x - camera.x}}px; top: {{item.y - camera.y}}px;">
+        <image wx:if="{{item.avatar}}" class="npc-avatar" src="{{item.avatar}}" mode="aspectFit"></image>
+        <text wx:else class="npc-emoji">{{item.emoji}}</text>
+        <view class="npc-name-tag">{{item.name}}</view>
+      </view>
+    </view>
+
+    <!-- 玩家 -->
+    <view class="player-wrapper" style="left: {{player.x - camera.x}}px; top: {{player.y - camera.y}}px;">
+      <image
+        class="player-sprite"
+        src="/assets/主角走动/{{player.frameIndex}}.png"
+        mode="aspectFit"
+      ></image>
+    </view>
+
+    <!-- 点击目标指示器 -->
+    <view class="target-indicator" wx:if="{{showTarget}}" style="left: {{targetX - camera.x}}px; top: {{targetY - camera.y}}px;"></view>
+  </view>
+
+  <!-- 物品栏 -->
+  <view class="inventory-bar">
+    <view class="inventory-title">物品栏</view>
+    <view class="inventory-items">
+      <view wx:for="{{inventory}}" wx:key="id" class="inventory-item">
+        <text class="item-emoji">{{item.icon}}</text>
+        <text class="item-name">{{item.name}}</text>
+      </view>
+      <view wx:if="{{inventory.length === 0}}" class="empty-hint">
+        <text>尚未收集任何物品</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 对话框 -->
+  <dialog-box id="dialogBox" visible="{{dialogVisible}}" npcName="{{currentNpc.name}}" dialog="{{currentNpc.dialog || []}}" bind:close="closeDialog" />
+
+  <!-- 二维码奖励弹窗 -->
+  <qr-popup id="qrPopup" visible="{{qrPopupVisible}}" qrCodeUrl="{{qrCodeUrl}}" rewardDesc="{{rewardDesc}}" bind:close="closeQrPopup" />
+</view>

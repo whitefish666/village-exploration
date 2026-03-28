@@ -1,0 +1,28 @@
+<!-- 麦田小游戏页面 -->
+<view class="container">
+  <!-- 背景图 -->
+  <image class="bg" src="/assets/麦田游戏/背景.png" mode="aspectFill"></image>
+
+  <!-- 麦穗列表 -->
+  <view wx:for="{{wheatItems}}" wx:key="id" class="wheat-item {{item.collected ? 'collected' : ''}}"
+    style="left: {{item.x}}px; top: {{item.y}}px;"
+    bindtap="collectWheat" data-id="{{item.id}}">
+    <image src="/assets/麦田游戏/麦穗.png" mode="aspectFit"></image>
+  </view>
+
+  <!-- 计时器 -->
+  <view class="timer">{{timeLeft}}秒</view>
+
+  <!-- 进度 -->
+  <view class="progress">{{collected}}/{{total}}</view>
+
+  <!-- 游戏结束 -->
+  <view class="game-end" wx:if="{{gameEnded}}">
+    <view class="end-content">
+      <text class="end-text">游戏结束！</text>
+      <text class="end-desc" wx:if="{{allCollected}}">成功收集所有麦穗！</text>
+      <text class="end-desc" wx:else>时间到！收集了{{collected}}/{{total}}个麦穗</text>
+      <button class="end-btn" bindtap="closeGame">确定</button>
+    </view>
+  </view>
+</view>

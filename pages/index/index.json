@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "dialog-box": "/components/dialog-box/dialog-box",
+    "qr-popup": "/components/qr-popup/qr-popup"
+  },
+  "navigationBarTitleText": "乡村探索"
+}

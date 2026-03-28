@@ -1,0 +1,32 @@
+<!-- 粘土小游戏页面 -->
+<view class="container" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd">
+  <!-- 背景 -->
+  <view class="bg"></view>
+
+  <!-- 石块列表 -->
+  <view wx:for="{{stones}}" wx:key="id" class="stone {{item.caught ? 'caught' : ''}}"
+    style="left: {{item.x}}px; top: {{item.y}}px;">
+    <image src="/assets/粘土游戏/石块.png" mode="aspectFit"></image>
+  </view>
+
+  <!-- 盆 -->
+  <view class="basin" style="left: {{basinX}}px;">
+    <image src="/assets/粘土游戏/盆.png" mode="aspectFit"></image>
+  </view>
+
+  <!-- 计时器 -->
+  <view class="timer">{{timeLeft}}秒</view>
+
+  <!-- 进度 -->
+  <view class="progress">{{caught}}/10</view>
+
+  <!-- 游戏结束 -->
+  <view class="game-end" wx:if="{{gameEnded}}">
+    <view class="end-content">
+      <text class="end-text">游戏结束！</text>
+      <text class="end-desc" wx:if="{{allCaught}}">成功收集所有粘土！</text>
+      <text class="end-desc" wx:else>时间到！收集了{{caught}}/10个粘土</text>
+      <button class="end-btn" bindtap="closeGame">确定</button>
+    </view>
+  </view>
+</view>

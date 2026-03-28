@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/index/index",
+    "pages/minigame/memory/memory",
+    "pages/minigame/catch/catch",
+    "pages/minigame/wheat/wheat",
+    "pages/minigame/clay/clay"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#8B4513",
+    "navigationBarTitleText": "乡村探索",
+    "navigationBarTextStyle": "white",
+    "orientation": "landscape"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,314 @@
+/* 主页面样式 */
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #87CEEB;
+}
+
+/* 游戏地图区域 */
+.game-map {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: #90EE90;
+}
+
+/* 地图背景 */
+.map-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.ground {
+  position: absolute;
+  /* 宽高由内联样式决定 */
+}
+
+/* 树木 */
+.tree {
+  position: absolute;
+  width: 40px;
+  height: 60px;
+}
+
+.tree::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 20px;
+  background-color: #8B4513;
+}
+
+.tree::after {
+  content: '';
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 45px solid #228B22;
+}
+
+/* 房子 */
+.house {
+  position: absolute;
+  width: 80px;
+  height: 70px;
+  background-color: #DEB887;
+  border: 3px solid #8B4513;
+  border-radius: 5px;
+}
+
+.house::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -5px;
+  width: 0;
+  height: 0;
+  border-left: 45px solid transparent;
+  border-right: 45px solid transparent;
+  border-bottom: 30px solid #A0522D;
+}
+
+.house::after {
+  content: '';
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 30px;
+  background-color: #8B4513;
+  border-radius: 3px 3px 0 0;
+}
+
+/* 麦堆 */
+.wheat-pile {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 5;
+}
+
+.wheat-icon {
+  width: 100%;
+  height: 100%;
+  background-color: #DAA520;
+  border-radius: 50% 50% 40% 40%;
+  border: 2px solid #B8860B;
+}
+
+.wheat-emoji {
+  position: absolute;
+  font-size: 40px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.wheat-pile.collected {
+  opacity: 0.3;
+}
+
+.wheat-pile.collected .wheat-icon {
+  background-color: #999;
+  border-color: #666;
+}
+
+/* 粘土堆 */
+.clay-pile {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  z-index: 5;
+}
+
+.clay-emoji {
+  position: absolute;
+  font-size: 40px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  pointer-events: none;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* NPC层 */
+.npcs-layer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.npc-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+}
+
+.npc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.npc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.npc-body {
+  width: 125px;
+  height: 125px;
+  background-color: #D4A574;
+  border: 3px solid #8B4513;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.npc-emoji {
+  font-size: 70px;
+}
+
+.npc-avatar {
+  width: 125px;
+  height: 125px;
+}
+
+.npc-name-tag {
+  margin-top: 5px;
+  padding: 2px 10px;
+  background-color: rgba(139, 69, 19, 0.9);
+  color: #F5F0E1;
+  font-size: 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* 玩家 */
+.player-wrapper {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  transition: left 0.05s linear, top 0.05s linear;
+}
+
+.player-sprite {
+  width: 138px;
+  height: 138px;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-body {
+  width: 45px;
+  height: 45px;
+  background-color: #4A90D9;
+  border: 3px solid #2E5A8B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-emoji {
+  font-size: 26px;
+}
+
+/* 目标指示器 */
+.target-indicator {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.3; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+}
+
+/* 物品栏 */
+.inventory-bar {
+  height: 80px;
+  background-color: #E8DCC8;
+  border-top: 4rpx solid #8B4513;
+  padding: 10rpx 20rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.inventory-title {
+  color: #8B4513;
+  font-size: 24rpx;
+  font-weight: bold;
+  margin-right: 20rpx;
+}
+
+.inventory-items {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.inventory-item {
+  min-width: 80rpx;
+  height: 60rpx;
+  background-color: #F5F0E1;
+  border: 2rpx solid #D4A574;
+  border-radius: 8rpx;
+  margin-right: 15rpx;
+  padding: 0 15rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-emoji {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.item-name {
+  font-size: 20rpx;
+  color: #4A3728;
+}
+
+.empty-hint {
+  color: #999;
+  font-size: 24rpx;
+}

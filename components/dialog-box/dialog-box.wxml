@@ -1,0 +1,14 @@
+<!-- 对话框组件 -->
+<view class="dialog-box" hidden="{{!visible}}">
+  <view class="dialog-content">
+    <view class="dialog-header">
+      <text class="npc-name">{{npcName}}</text>
+    </view>
+    <view class="dialog-body">
+      <text class="dialog-text">{{currentText}}</text>
+    </view>
+    <view class="dialog-footer" bindtap="nextDialog">
+      <text class="continue-hint">{{hasNext ? '点击继续 ▼' : '点击关闭'}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,18 @@
+<!-- 二维码奖励弹窗组件 -->
+<view class="qr-popup" hidden="{{!visible}}">
+  <view class="popup-mask" bindtap="close"></view>
+  <view class="popup-content">
+    <view class="popup-header">
+      <text class="title">恭喜获得奖励！</text>
+    </view>
+    <view class="qr-container">
+      <image class="qr-image" src="{{qrCodeUrl}}" mode="aspectFit"></image>
+    </view>
+    <view class="reward-desc">
+      <text>{{rewardDesc}}</text>
+    </view>
+    <view class="close-btn" bindtap="close">
+      <text>关闭</text>
+    </view>
+  </view>
+</view>

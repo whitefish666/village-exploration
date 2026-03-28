@@ -1,0 +1,139 @@
+/* 接物游戏样式 */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E8DCC8 0%, #F5F0E1 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.game-header {
+  text-align: center;
+  padding: 30rpx;
+}
+
+.title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #8B4513;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.game-area {
+  position: relative;
+  width: 100%;
+  height: 400rpx;
+}
+
+.game-canvas {
+  width: 100%;
+  height: 100%;
+  background-color: #87CEEB;
+}
+
+.status-overlay {
+  position: absolute;
+  top: 20rpx;
+  left: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.score-text {
+  display: inline-block;
+  padding: 10rpx 30rpx;
+  background-color: rgba(139, 69, 19, 0.9);
+  color: #F5F0E1;
+  font-size: 28rpx;
+  border-radius: 30rpx;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+  padding: 30rpx;
+}
+
+.btn-start, .btn-restart {
+  width: 300rpx;
+  height: 80rpx;
+  background-color: #8B4513;
+  color: #F5F0E1;
+  font-size: 30rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back {
+  width: 300rpx;
+  height: 70rpx;
+  background-color: #E8DCC8;
+  color: #8B4513;
+  font-size: 26rpx;
+  border: 2rpx solid #8B4513;
+  border-radius: 35rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 结果弹窗 */
+.result-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.result-content {
+  width: 500rpx;
+  background-color: #F5F0E1;
+  border: 6rpx solid #8B4513;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.result-title {
+  display: block;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #8B4513;
+  margin-bottom: 20rpx;
+}
+
+.result-desc {
+  display: block;
+  font-size: 28rpx;
+  color: #4A3728;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.result-btn {
+  width: 200rpx;
+  height: 70rpx;
+  background-color: #8B4513;
+  color: #F5F0E1;
+  font-size: 28rpx;
+  border-radius: 35rpx;
+}

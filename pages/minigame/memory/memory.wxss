@@ -1,0 +1,125 @@
+/* 记忆游戏样式 */
+.container {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E8DCC8 0%, #F5F0E1 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 30rpx;
+}
+
+.game-header {
+  text-align: center;
+  padding: 30rpx 0;
+}
+
+.title {
+  display: block;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #8B4513;
+  margin-bottom: 10rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.game-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pattern-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  margin-bottom: 50rpx;
+}
+
+.pattern-item {
+  width: 150rpx;
+  height: 150rpx;
+  background-color: #D4A574;
+  border: 4rpx solid #8B4513;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.pattern-item.active {
+  background-color: #FFD700;
+  transform: scale(1.1);
+}
+
+.pattern-item.matched {
+  background-color: #90EE90;
+  border-color: #228B22;
+}
+
+.pattern-item.wrong {
+  background-color: #FF6B6B;
+  border-color: #CC0000;
+}
+
+.pattern-icon {
+  font-size: 60rpx;
+}
+
+.status-area {
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.status-text {
+  display: block;
+  font-size: 32rpx;
+  color: #4A3728;
+  margin-bottom: 15rpx;
+}
+
+.progress-text {
+  display: block;
+  font-size: 28rpx;
+  color: #8B4513;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+  padding: 30rpx 0;
+}
+
+.btn-start, .btn-restart {
+  width: 300rpx;
+  height: 80rpx;
+  background-color: #8B4513;
+  color: #F5F0E1;
+  font-size: 30rpx;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-back {
+  width: 300rpx;
+  height: 70rpx;
+  background-color: #E8DCC8;
+  color: #8B4513;
+  font-size: 26rpx;
+  border: 2rpx solid #8B4513;
+  border-radius: 35rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

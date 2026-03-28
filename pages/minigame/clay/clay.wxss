@@ -1,0 +1,102 @@
+/* 粘土小游戏样式 */
+.container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: #90EE90;
+}
+
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #90EE90;
+}
+
+.stone {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  z-index: 1;
+}
+
+.stone.caught {
+  display: none;
+}
+
+.basin {
+  position: absolute;
+  bottom: 20px;
+  width: 80px;
+  height: 50px;
+  z-index: 10;
+  transition: left 0.05s linear;
+}
+
+.timer {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  font-size: 24px;
+  color: #8B4513;
+  background: rgba(255,255,255,0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 100;
+}
+
+.progress {
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  font-size: 20px;
+  color: #8B4513;
+  background: rgba(255,255,255,0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 100;
+}
+
+.game-end {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.end-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end-text {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.end-desc {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.end-btn {
+  background: #8B4513;
+  color: #fff;
+  padding: 15px 40px;
+  border-radius: 10px;
+  font-size: 18px;
+}

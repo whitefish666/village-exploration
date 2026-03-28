@@ -1,0 +1,27 @@
+/* 玩家角色样式 */
+.player-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  transition: left 0.05s linear, top 0.05s linear;
+}
+
+.player-sprite {
+  width: 50px;
+  height: 50px;
+}
+
+/* 不同朝向 */
+.player-wrapper.down {
+}
+
+.player-wrapper.up {
+}
+
+.player-wrapper.left {
+}
+
+.player-wrapper.right {
+}

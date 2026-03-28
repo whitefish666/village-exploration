@@ -1,0 +1,45 @@
+<!-- 首页：横板游戏入口 -->
+<view class="container">
+  <!-- 左侧：标题区域 -->
+  <view class="left-section">
+    <view class="header">
+      <text class="title">🏘️ 乡村探索</text>
+      <text class="subtitle">乡村振兴主题横版探索游戏</text>
+    </view>
+
+    <view class="profile-section">
+      <text class="welcome-text">欢迎来到乡村探索</text>
+      <text class="desc-text">点击下方开始按钮进入游戏</text>
+    </view>
+  </view>
+
+  <!-- 中间：游戏入口 -->
+  <view class="center-section">
+    <view class="game-entry">
+      <view class="entry-btn start-btn" bindtap="goToGame">
+        <text class="btn-icon">🗺️</text>
+        <text class="btn-text">开始探索</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 右侧：功能菜单 -->
+  <view class="right-section">
+    <view class="menu-section">
+      <view class="menu-item" bindtap="goToAchievement">
+        <text class="menu-icon">🏆</text>
+        <text class="menu-text">成就</text>
+      </view>
+      <view class="menu-item" bindtap="goToIntro">
+        <text class="menu-icon">📖</text>
+        <text class="menu-text">村庄介绍</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 -->
+  <view class="footer">
+    <text class="version">v1.0.0</text>
+    <text class="tips">点击地图任意位置移动角色</text>
+  </view>
+</view>

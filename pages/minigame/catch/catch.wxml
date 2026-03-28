@@ -1,0 +1,30 @@
+<!-- 接物游戏页面 -->
+<view class="container">
+  <view class="game-header">
+    <text class="title">接物游戏</text>
+    <text class="subtitle">控制布袋接住掉落的粘土</text>
+  </view>
+
+  <view class="game-area">
+    <canvas canvas-id="catchCanvas" class="game-canvas" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd"></canvas>
+
+    <view class="status-overlay">
+      <text class="score-text">已收集: {{caughtCount}} / 10</text>
+    </view>
+  </view>
+
+  <view class="controls">
+    <button class="btn-start" bindtap="startGame" wx:if="{{gameState === 'idle'}}">开始游戏</button>
+    <button class="btn-restart" bindtap="startGame" wx:if="{{gameState === 'ended'}}">再来一次</button>
+    <button class="btn-back" bindtap="goBack">返回村庄</button>
+  </view>
+
+  <!-- 结果弹窗 -->
+  <view class="result-popup" wx:if="{{showResult}}">
+    <view class="result-content">
+      <text class="result-title">{{resultTitle}}</text>
+      <text class="result-desc">{{resultDesc}}</text>
+      <button class="result-btn" bindtap="closeResult">确定</button>
+    </view>
+  </view>
+</view>

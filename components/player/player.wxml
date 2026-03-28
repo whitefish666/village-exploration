@@ -1,0 +1,8 @@
+<!-- 玩家角色组件 -->
+<view class="player-wrapper {{direction}}" style="left: {{x}}px; top: {{y}}px;">
+  <image
+    class="player-sprite"
+    src="{{spritePath}}"
+    mode="aspectFit"
+  ></image>
+</view>

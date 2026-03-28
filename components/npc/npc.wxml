@@ -1,0 +1,7 @@
+<!-- NPC组件 -->
+<view class="npc {{direction}}" style="left: {{x}}px; top: {{y}}px;">
+  <view class="npc-body">
+    <image class="npc-avatar" src="{{avatarPath}}" mode="aspectFit"></image>
+  </view>
+  <view class="npc-name-tag">{{name}}</view>
+</view>

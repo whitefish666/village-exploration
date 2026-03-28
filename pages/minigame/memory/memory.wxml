@@ -1,0 +1,26 @@
+<!-- 记忆游戏页面 -->
+<view class="container">
+  <view class="game-header">
+    <text class="title">记忆游戏</text>
+    <text class="subtitle">记住图案的出现顺序</text>
+  </view>
+
+  <view class="game-area">
+    <view class="pattern-grid">
+      <view wx:for="{{patterns}}" wx:key="index" class="pattern-item {{item.active ? 'active' : ''}} {{item.matched ? 'matched' : ''}}" bindtap="onPatternTap" data-index="{{index}}">
+        <text class="pattern-icon">{{item.icon}}</text>
+      </view>
+    </view>
+
+    <view class="status-area">
+      <text class="status-text">{{statusText}}</text>
+      <text class="progress-text">正确: {{correctCount}} / {{totalPatterns}}</text>
+    </view>
+  </view>
+
+  <view class="controls">
+    <button class="btn-start" bindtap="startGame" wx:if="{{gameState === 'idle'}}">开始游戏</button>
+    <button class="btn-restart" bindtap="startGame" wx:if="{{gameState === 'ended'}}">再来一次</button>
+    <button class="btn-back" bindtap="goBack">返回村庄</button>
+  </view>
+</view>

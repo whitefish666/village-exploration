@@ -1,0 +1,53 @@
+/* NPC组件样式 */
+.npc {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  transition: left 0.3s, top 0.3s;
+}
+
+.npc-body {
+  width: 60px;
+  height: 60px;
+  background-color: #D4A574;
+  border: 3px solid #8B4513;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.npc-avatar {
+  width: 50px;
+  height: 50px;
+}
+
+.npc-name-tag {
+  margin-top: 5px;
+  padding: 2px 10px;
+  background-color: rgba(139, 69, 19, 0.9);
+  color: #F5F0E1;
+  font-size: 12px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* 不同朝向 */
+.npc.down .npc-body {
+  border-bottom: none;
+}
+
+.npc.up .npc-body {
+  border-top: none;
+}
+
+.npc.left .npc-body {
+  border-left: none;
+}
+
+.npc.right .npc-body {
+  border-right: none;
+}

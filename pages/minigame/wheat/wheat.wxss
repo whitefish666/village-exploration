@@ -1,0 +1,101 @@
+/* 麦田小游戏样式 */
+.container {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.wheat-item {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  animation: float 1s ease-in-out infinite;
+  z-index: 1;
+}
+
+.wheat-item.collected {
+  display: none;
+}
+
+.wheat-item:active {
+  transform: scale(1.2);
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.timer {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  font-size: 24px;
+  color: #8B4513;
+  background: rgba(255,255,255,0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 10;
+}
+
+.progress {
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  font-size: 20px;
+  color: #8B4513;
+  background: rgba(255,255,255,0.8);
+  padding: 10px 20px;
+  border-radius: 10px;
+  z-index: 10;
+}
+
+.game-end {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.end-content {
+  background: #fff;
+  padding: 40px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end-text {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.end-desc {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.end-btn {
+  background: #8B4513;
+  color: #fff;
+  padding: 15px 40px;
+  border-radius: 10px;
+  font-size: 18px;
+}
