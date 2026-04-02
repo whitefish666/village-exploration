@@ -28,7 +28,7 @@ module.exports = {
       ],
       trigger: 'auto',
       task: null,
-      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/village_chief.png'
+      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/papermaking.png'
     },
     {
       id: 'a_ming',

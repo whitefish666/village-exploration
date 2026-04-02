@@ -159,7 +159,7 @@ Page({
       tasks: savedData.tasks || this.data.tasks,
       wheatCollected: savedData.tasks.wheatCollected || false,
       joystickVisible: true,
-      playerImage: '/assets/player.png'
+      playerImage: `${CDN}/asset/characters/protagonist2.png`
     })
     // 检查NPC接近状态（确保交互键状态正确）
     this.checkNpcProximity()
@@ -196,8 +196,8 @@ Page({
       this.updateAnimation()
     } else {
       // 站立时显示站立图片
-      if (this.data.playerImage !== '/assets/player.png') {
-        this.setData({ playerImage: '/assets/player.png' })
+      if (this.data.playerImage !== `${CDN}/asset/characters/protagonist2.png`) {
+        this.setData({ playerImage: `${CDN}/asset/characters/protagonist2.png` })
       }
       // 检测NPC接近（站立时也需要检测）
       this.checkNpcProximity()
@@ -387,7 +387,7 @@ Page({
     this.setData({
       joystickOffsetX: 0,
       joystickOffsetY: 0,
-      playerImage: '/assets/player.png'
+      playerImage: `${CDN}/asset/characters/protagonist2.png`
     })
   },
 
