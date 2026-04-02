@@ -10,7 +10,7 @@ Page({
     stones: [],       // 石块列表
     caught: 0,        // 已收集
     basinX: 0,      // 盆的位置（横屏模式）
-    basinWidth: 250,  // 盆的宽度（固定250px）
+    basinWidth: 280,  // 盆的宽度（固定280px）
     gameEnded: false, // 游戏结束
     allCaught: false,  // 全部收集
     gameLoopTimer: null,
@@ -34,7 +34,7 @@ Page({
     for (let i = 0; i < 10; i++) {
       stones.push({
         id: i,
-        x: Math.random() * 350 + 20,  // 随机X（屏幕宽度内）
+        x: Math.random() * 200 + 40,  // 随机X（盆可移动范围内）
         y: -20 - Math.random() * 200, // 初始在屏幕上方
         speed: 2 + Math.random() * 2,  // 随机速度
         caught: false
@@ -46,7 +46,7 @@ Page({
       caught: 0,
       gameEnded: false,
       allCaught: false,
-      basinX: (390 - 250) / 2 + 50  // 盆初始居中偏右50px
+      basinX: (390 - 280) / 2  // 盆初始居中
     })
 
     // 启动游戏循环
@@ -60,8 +60,12 @@ Page({
   updateStones() {
     if (this.data.gameEnded) return
 
-    const { stones, basinX, basinWidth, canvasWidth } = this.data
-    const basinY = 680  // 盆的Y位置（靠近底部）
+    const { stones, basinX, canvasWidth } = this.data
+    const basinWidth = 280  // 与CSS中盆的宽度一致
+    const screenHeight = 700  // 游戏区域高度（约700px）
+    const basinBottom = screenHeight - 20  // 盆底部Y（距离顶部）
+    const basinTop = basinBottom - 60  // 盆开口顶部Y（收集判定区域）
+    const stoneSize = 40  // 石头视觉尺寸（与CSS一致）
     let caught = this.data.caught
     let allCaught = true
 
@@ -72,19 +76,14 @@ Page({
       // 移动石块
       stone.y += stone.speed
 
-      // 石块大小（5px）
-      const stoneSize = 5
+      // 检测碰撞：石块必须掉落到盆的开口范围内才算接住
+      // 石块中心点(y + stoneSize/2)必须在盆开口区域内
+      const stoneCenterY = stone.y + stoneSize / 2
 
-      // 检测碰撞：石块必须掉落在盆的范围内才算接住
-      // 盆的Y位置是680，盆高度125px
-      // 石块的底部(y + stoneSize)必须在盆的范围内才算接住
-      const stoneBottom = stone.y + stoneSize
-      const basinTop = basinY - 50  // 盆的顶部区域
-      const basinBottom = basinY + 70  // 盆的底部区域
-
-      if (stoneBottom >= basinTop && stoneBottom <= basinBottom) {
-        // 石块必须在盆的水平范围内
-        if (stone.x >= basinX && stone.x + stoneSize <= basinX + basinWidth) {
+      if (stoneCenterY >= basinTop && stoneCenterY <= basinBottom) {
+        // 石块中心X必须在盆的水平范围内
+        const stoneCenterX = stone.x + stoneSize / 2
+        if (stoneCenterX >= basinX && stoneCenterX <= basinX + basinWidth) {
           stone.caught = true
           caught++
           continue
@@ -92,9 +91,9 @@ Page({
       }
 
       // 超出屏幕底部
-      if (stone.y > 780) {
+      if (stone.y > screenHeight) {
         stone.y = -20
-        stone.x = Math.random() * (canvasWidth - 40) + 20
+        stone.x = Math.random() * 200 + 40
       }
     }
 
