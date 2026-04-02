@@ -17,6 +17,11 @@ App({
         baiCiComplete: false
       }
     }
+
+    // 初始化音频管理器并播放BGM
+    const audioManager = require('./utils/audioManager.js')
+    audioManager.init()
+    audioManager.playBgm()
   },
 
   saveData() {

@@ -1,13 +1,13 @@
 <!-- 麦田小游戏页面 -->
 <view class="container">
   <!-- 背景图 -->
-  <image class="bg" src="/assets/麦田游戏/背景.png" mode="aspectFill"></image>
+  <image class="bg" src="{{CDN}}/asset/game/wheat/background.png" mode="aspectFill"></image>
 
   <!-- 麦穗列表 -->
   <view wx:for="{{wheatItems}}" wx:key="id" class="wheat-item {{item.collected ? 'collected' : ''}}"
     style="left: {{item.x}}px; top: {{item.y}}px;"
     bindtap="collectWheat" data-id="{{item.id}}">
-    <image src="/assets/麦田游戏/麦穗.png" mode="aspectFit"></image>
+    <image src="{{CDN}}/asset/game/wheat/wheat_ear.png" mode="aspectFit"></image>
   </view>
 
   <!-- 计时器 -->

@@ -1,16 +1,18 @@
 // 粘土小游戏页面
 const gameData = require('../../../utils/gameData.js')
+const audioManager = require('../../../utils/audioManager.js')
+const CDN = 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com'
 
 Page({
   data: {
+    // CDN常量
+    CDN: CDN,
     stones: [],       // 石块列表
     caught: 0,        // 已收集
     basinX: 0,      // 盆的位置（横屏模式）
     basinWidth: 250,  // 盆的宽度（固定250px）
-    timeLeft: 15,     // 剩余时间
     gameEnded: false, // 游戏结束
     allCaught: false,  // 全部收集
-    timer: null,
     gameLoopTimer: null,
     canvasWidth: 390,  // 游戏区域宽度（横屏屏幕）
     canvasHeight: 500
@@ -21,9 +23,6 @@ Page({
   },
 
   onUnload() {
-    if (this.data.timer) {
-      clearInterval(this.data.timer)
-    }
     if (this.data.gameLoopTimer) {
       clearTimeout(this.data.gameLoopTimer)
     }
@@ -45,27 +44,13 @@ Page({
     this.setData({
       stones: stones,
       caught: 0,
-      timeLeft: 15,
       gameEnded: false,
       allCaught: false,
-      basinX: (390 - 250) / 2  // 盆初始居中
+      basinX: (390 - 250) / 2 + 50  // 盆初始居中偏右50px
     })
 
-    // 启动计时器
-    this.startTimer()
     // 启动游戏循环
     this.startGameLoop()
-  },
-
-  startTimer() {
-    this.data.timer = setInterval(() => {
-      const timeLeft = this.data.timeLeft - 1
-      if (timeLeft <= 0) {
-        this.endGame(false)
-      } else {
-        this.setData({ timeLeft })
-      }
-    }, 1000)
   },
 
   startGameLoop() {
@@ -87,8 +72,8 @@ Page({
       // 移动石块
       stone.y += stone.speed
 
-      // 石块大小（300%放大后36px）
-      const stoneSize = 36
+      // 石块大小（5px）
+      const stoneSize = 5
 
       // 检测碰撞：石块必须掉落在盆的范围内才算接住
       // 盆的Y位置是680，盆高度125px
@@ -153,12 +138,10 @@ Page({
   },
 
   endGame(allCaught) {
-    clearInterval(this.data.timer)
     clearTimeout(this.data.gameLoopTimer)
     this.setData({
       gameEnded: true,
-      allCaught: allCaught,
-      timeLeft: 0
+      allCaught: allCaught
     })
 
     // 如果全部收集，添加物品到背包
@@ -168,6 +151,8 @@ Page({
   },
 
   closeGame() {
+    // 播放按钮音效
+    audioManager.playButton()
     wx.navigateBack()
   }
 })

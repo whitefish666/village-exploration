@@ -1,6 +1,6 @@
 {
-  "description": "乡村探索 - 乡村振兴主题横版探索游戏",
-  "appid": "touristappid",
+  "description": "匠心行 - 匠心乡村主题横版探索游戏",
+  "appid": "wxf4a7fb0817e98f31",
   "compileType": "miniprogram",
   "libVersion": "3.15.1",
   "setting": {
@@ -23,11 +23,31 @@
     "packNpmManually": false,
     "enableEngineNative": false,
     "packNpmRelationList": [],
-    "minifyWXSS": true
+    "minifyWXSS": true,
+    "compileWorklet": false,
+    "minified": false,
+    "uglifyFileName": false,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
+  },
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
   }
 }

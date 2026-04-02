@@ -1,4 +1,6 @@
 // 对话框组件
+const audioManager = require('../../utils/audioManager.js')
+
 Component({
   properties: {
     visible: {
@@ -35,6 +37,9 @@ Component({
 
   methods: {
     nextDialog() {
+      // 播放按钮音效
+      audioManager.playButton()
+
       const { currentIndex, dialog } = this.data
       if (currentIndex < dialog.length - 1) {
         const nextIndex = currentIndex + 1

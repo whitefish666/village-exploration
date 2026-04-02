@@ -1,4 +1,6 @@
 // 二维码奖励弹窗组件
+const audioManager = require('../../utils/audioManager.js')
+
 Component({
   properties: {
     visible: {
@@ -17,6 +19,8 @@ Component({
 
   methods: {
     close() {
+      // 播放按钮音效
+      audioManager.playButton()
       this.triggerEvent('close')
     }
   }

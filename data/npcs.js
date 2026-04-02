@@ -28,7 +28,7 @@ module.exports = {
       ],
       trigger: 'auto',
       task: null,
-      avatar: '/assets/村长.png'
+      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/village_chief.png'
     },
     {
       id: 'a_ming',
@@ -42,7 +42,7 @@ module.exports = {
       ],
       trigger: 'click',
       task: null,
-      avatar: '/assets/竹编.png'
+      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/bamboo_weaving.png'
     },
     {
       id: 'ma_bing',
@@ -56,7 +56,7 @@ module.exports = {
       ],
       trigger: 'click',
       task: 'wheat',
-      avatar: '/assets/麻饼.png'
+      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/sesame_cake.png'
     },
     {
       id: 'xiu_niang',
@@ -70,7 +70,7 @@ module.exports = {
       ],
       trigger: 'click',
       task: 'memory',
-      avatar: '/assets/绣娘.png'
+      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/xian_opera.png'
     },
     {
       id: 'bai_ci',
@@ -84,7 +84,7 @@ module.exports = {
       ],
       trigger: 'click',
       task: 'clay',
-      avatar: '/assets/白瓷.png'
+      avatar: 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com/asset/characters/white_ceramic.png'
     }
   ],
 
@@ -96,7 +96,7 @@ module.exports = {
 
   // 粘土堆位置
   clayPile: {
-    x: 300,
+    x: 150,
     y: 500
   }
 }

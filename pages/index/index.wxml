@@ -1,20 +1,18 @@
 <!-- 主页面：2D俯视角地图 -->
 <view class="container">
   <!-- 游戏地图区域 -->
-  <view class="game-map" bindtouchstart="onTouchStart" bindtouchmove="onTouchMove" bindtouchend="onTouchEnd">
+  <view class="game-map">
     <!-- 地图背景 -->
     <view class="map-background" style="transform: translate(-{{camera.x}}px, -{{camera.y}}px);">
       <!-- 地面背景图片 - 尺寸为世界尺寸 -->
-      <image class="ground" src="/assets/map.png" mode="aspectFill"
+      <image class="ground" src="{{CDN}}/asset/ultimate_images/ultimate_image.png" mode="aspectFill"
         style="width: {{mapSize.width}}px; height: {{mapSize.height}}px;"></image>
       <!-- 麦堆 -->
       <view class="wheat-pile {{wheatCollected ? 'collected' : ''}}" style="left: {{wheatPile.x}}px; top: {{wheatPile.y}}px;" catchtap="onWheatPileTap">
         <text class="wheat-emoji">🌾</text>
       </view>
-      <!-- 粘土堆 -->
-      <view class="clay-pile" style="left: {{clayPile.x}}px; top: {{clayPile.y}}px;" catchtap="onClayPileTap">
-        <text class="clay-emoji">🪨</text>
-      </view>
+      <!-- 粘土堆（仅触发区域） -->
+      <view class="clay-pile" style="left: {{clayPile.x}}px; top: {{clayPile.y}}px;" catchtap="onClayPileTap"></view>
     </view>
 
     <!-- NPC列表 -->
@@ -39,6 +37,11 @@
     <view class="joystick" wx:if="{{joystickVisible}}" catchtouchstart="onJoystickStart" catchtouchmove="onJoystickMove" catchtouchend="onJoystickEnd">
       <view class="joystick-base"></view>
       <view class="joystick-knob" style="transform: translate({{joystickOffsetX}}px, {{joystickOffsetY}}px);"></view>
+    </view>
+
+    <!-- 交互键 -->
+    <view class="interact-btn {{interactEnabled ? 'active' : 'disabled'}}" wx:if="{{interactVisible && nearNpcId}}" catchtap="onInteractTap">
+      <text class="interact-icon">🤝</text>
     </view>
 
     <!-- 点击目标指示器 -->

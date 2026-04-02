@@ -1,6 +1,8 @@
 // 主页面：2D俯视角地图游戏核心
 const gameData = require('../../utils/gameData.js')
 const npcsConfig = require('../../data/npcs.js')
+const audioManager = require('../../utils/audioManager.js')
+const CDN = 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com'
 
 Page({
   data: {
@@ -19,13 +21,16 @@ Page({
       x: 1250,
       y: 300,
       direction: 'down',
-      speed: 3,
+      speed: 1.0,
       frameIndex: 1,
       animationTimer: 0
     },
 
+    // CDN常量
+    CDN: CDN,
+
     // 玩家图片路径
-    playerImage: '/assets/主角走动/前/1.png',
+    playerImage: `${CDN}/asset/character_walk/front/1.png`,
 
     // NPC列表
     npcs: [],
@@ -69,6 +74,14 @@ Page({
 
     // 交互状态
     nearNpcId: null,
+
+    // 交互键
+    interactVisible: true,
+    interactEnabled: false,
+    interactTarget: null,
+
+    // 待显示奖励（对话框关闭后显示）
+    pendingRewardTaskId: null,
 
     // 任务状态
     tasks: {
@@ -141,13 +154,19 @@ Page({
     // 重新加载数据（可能从小游戏返回）
     const savedData = gameData.getGameData()
     this.setData({
+      player: savedData.player || this.data.player,
       inventory: savedData.inventory || [],
       tasks: savedData.tasks || this.data.tasks,
       wheatCollected: savedData.tasks.wheatCollected || false,
-      joystickVisible: true
+      joystickVisible: true,
+      playerImage: '/assets/player.png'
     })
+    // 检查NPC接近状态（确保交互键状态正确）
+    this.checkNpcProximity()
     // 重新启动游戏循环
     this.startGameLoop()
+    // 播放背景音乐（主页显示时触发）
+    audioManager.playBgm()
   },
 
   // 开始游戏循环
@@ -176,10 +195,12 @@ Page({
       this.checkNpcProximity()
       this.updateAnimation()
     } else {
-      // 站立时重置为0帧
-      if (this.data.player.frameIndex !== 1) {
-        this.setData({ 'player.frameIndex': 1 })
+      // 站立时显示站立图片
+      if (this.data.playerImage !== '/assets/player.png') {
+        this.setData({ playerImage: '/assets/player.png' })
       }
+      // 检测NPC接近（站立时也需要检测）
+      this.checkNpcProximity()
     }
     this.updateCamera()
   },
@@ -235,15 +256,19 @@ Page({
 
   // 更新玩家图片路径
   updatePlayerImage(direction, frameIndex) {
-    const dirMap = {
-      'up': '后',
-      'down': '前',
-      'left': '左',
-      'right': '右'
+    // 确保frameIndex有默认值
+    if (frameIndex === undefined || frameIndex === null) {
+      frameIndex = 1
     }
-    const folder = dirMap[direction] || '前'
+    const dirMap = {
+      'up': 'back',
+      'down': 'front',
+      'left': 'left',
+      'right': 'right'
+    }
+    const folder = dirMap[direction] || 'front'
     this.setData({
-      playerImage: `/assets/主角走动/${folder}/${frameIndex}.png`
+      playerImage: `${CDN}/asset/character_walk/${folder}/${frameIndex}.png`
     })
   },
 
@@ -310,13 +335,13 @@ Page({
     const { direction, frameIndex } = this.data.player
     // 方向映射：代码方向 -> 文件夹名
     const dirMap = {
-      'up': '后',
-      'down': '前',
-      'left': '左',
-      'right': '右'
+      'up': 'back',
+      'down': 'front',
+      'left': 'left',
+      'right': 'right'
     }
-    const folder = dirMap[direction] || '前'
-    return `/assets/主角走动/${folder}/${frameIndex}.png`
+    const folder = dirMap[direction] || 'front'
+    return `${CDN}/asset/character_walk/${folder}/${frameIndex}.png`
   },
 
   // 触摸开始
@@ -361,8 +386,157 @@ Page({
     this.data.joystickDirection = null
     this.setData({
       joystickOffsetX: 0,
-      joystickOffsetY: 0
+      joystickOffsetY: 0,
+      playerImage: '/assets/player.png'
     })
+  },
+
+  // 交互键点击
+  onInteractTap() {
+    // 播放按钮音效
+    audioManager.playButton()
+
+    const { interactTarget, player, npcs, tasks, inventory, nearNpcId } = this.data
+
+    // 麦堆交互
+    if (interactTarget && interactTarget.type === 'wheat') {
+      wx.navigateTo({ url: '/pages/minigame/wheat/wheat' })
+      return
+    }
+
+    // 粘土堆交互
+    if (interactTarget && interactTarget.type === 'clay') {
+      wx.navigateTo({ url: '/pages/minigame/clay/clay' })
+      return
+    }
+
+    // 找到最近的NPC
+    let targetNpc = null
+    const interactDistance = 60
+
+    // 如果有interactTarget且是NPC，使用它
+    if (interactTarget && !interactTarget.type) {
+      targetNpc = interactTarget
+    } else if (nearNpcId) {
+      // 否则从npcs列表中找到对应的NPC
+      targetNpc = npcs.find(npc => npc.id === nearNpcId)
+    }
+
+    // 如果找到了NPC，检查距离
+    if (targetNpc) {
+      const dx = targetNpc.x - player.x
+      const dy = targetNpc.y - player.y
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      if (distance >= interactDistance) return
+    } else {
+      // 没有找到NPC且不是麦堆/粘土堆，返回
+      if (!interactTarget || (!interactTarget.type && !interactTarget.type === 'wheat' && !interactTarget.type === 'clay')) {
+        return
+      }
+    }
+
+    // 确保有NPC
+    if (!targetNpc) {
+      // 如果既没有目标也不是麦堆/粘土堆，直接返回
+      if (!interactTarget || (!interactTarget.type && !interactTarget.type === 'wheat' && !interactTarget.type === 'clay')) {
+        return
+      }
+    }
+
+    const npc = targetNpc
+
+    // 触发对应NPC的交互
+    if (npc && npc.trigger === 'auto') {
+      this.showDialog(npc)
+      return
+    }
+
+    // 麻饼任务
+    if (npc && npc.task === 'wheat' && !tasks.maBingComplete) {
+      const hasWheat = inventory.some(item => item.id === 'wheat')
+      if (hasWheat) {
+        gameData.removeItem('wheat')
+        gameData.completeTask('maBing')
+        this.setData({
+          tasks: { ...tasks, maBingComplete: true },
+          inventory: this.data.inventory.filter(item => item.id !== 'wheat'),
+          pendingRewardTaskId: 'maBing'
+        })
+        this.showDialog({
+          name: npc.name,
+          dialog: ['谢谢你帮我收集小麦！', '这是你的奖励，以后常来玩哦！']
+        })
+      } else {
+        this.showDialog({
+          name: npc.name,
+          dialog: ['我是麻饼！', '我需要麦穗来做麻饼，你能帮我去麦田收集一些吗？']
+        })
+      }
+      return
+    }
+
+    // 绣娘记忆游戏
+    if (npc && npc.task === 'memory' && !tasks.xiuNiangComplete) {
+      wx.navigateTo({ url: '/pages/minigame/memory/memory' })
+      return
+    }
+
+    // 白瓷任务
+    if (npc && npc.task === 'clay' && !tasks.baiCiComplete) {
+      const hasClay = inventory.some(item => item.id === 'clay')
+      if (hasClay) {
+        gameData.removeItem('clay')
+        gameData.completeTask('baiCi')
+        this.setData({
+          tasks: { ...tasks, baiCiComplete: true },
+          inventory: this.data.inventory.filter(item => item.id !== 'clay'),
+          pendingRewardTaskId: 'baiCi'
+        })
+        this.showDialog({
+          name: npc.name,
+          dialog: ['谢谢你帮我收集粘土！', '这是你的奖励，以后常来玩哦！']
+        })
+      } else {
+        this.showDialog({
+          name: npc.name,
+          dialog: [npc.dialog[0], '我需要粘土来做瓷器，你能帮我去收集一些吗？']
+        })
+      }
+      return
+    }
+
+    // 已完成的任务对话 - 每次都会弹出二维码
+    if (npc && tasks.maBingComplete && npc.task === 'wheat') {
+      this.setData({ pendingRewardTaskId: 'maBing' })
+      this.showDialog({
+        name: npc.name,
+        dialog: ['谢谢你帮我收集小麦！', '这是你的奖励，以后常来玩哦！']
+      })
+      return
+    }
+
+    if (npc && tasks.xiuNiangComplete && npc.task === 'memory') {
+      this.setData({ pendingRewardTaskId: 'xiuNiang' })
+      this.showDialog({
+        name: npc.name,
+        dialog: ['记忆游戏很有趣吧？', '这是你的奖励，欢迎再来玩！']
+      })
+      return
+    }
+
+    if (npc && tasks.baiCiComplete && npc.task === 'clay') {
+      this.setData({ pendingRewardTaskId: 'baiCi' })
+      this.showDialog({
+        name: npc.name,
+        dialog: ['谢谢你帮我收集粘土！', '这是你的奖励，以后常来玩哦！']
+      })
+      return
+    }
+
+    // 默认对话
+    if (npc) {
+      this.showDialog(npc)
+    }
   },
 
   // 更新遥控杆位置
@@ -492,10 +666,9 @@ Page({
 
   // 检查NPC接近
   checkNpcProximity() {
-    const { player, npcs, isMoving } = this.data
-    if (!isMoving) return
-
+    const { player, npcs, isMoving, joystickActive } = this.data
     const interactDistance = 60
+    let foundTarget = null
 
     for (const npc of npcs) {
       const dx = npc.x - player.x
@@ -503,12 +676,41 @@ Page({
       const distance = Math.sqrt(dx * dx + dy * dy)
 
       if (distance < interactDistance) {
-        this.setData({ nearNpcId: npc.id })
-        return
+        foundTarget = { nearNpcId: npc.id, interactEnabled: true, interactTarget: npc }
+        break
       }
     }
 
-    this.setData({ nearNpcId: null })
+    // 检查麦堆
+    if (!foundTarget) {
+      const { wheatPile, clayPile } = this.data
+      const wheatDx = wheatPile.x - player.x
+      const wheatDy = wheatPile.y - player.y
+      if (Math.sqrt(wheatDx * wheatDx + wheatDy * wheatDy) < interactDistance) {
+        foundTarget = { nearNpcId: 'wheat_pile', interactEnabled: true, interactTarget: { type: 'wheat' } }
+      }
+    }
+
+    // 检查粘土堆
+    if (!foundTarget) {
+      const { wheatPile, clayPile } = this.data
+      const clayDx = clayPile.x - player.x
+      const clayDy = clayPile.y - player.y
+      if (Math.sqrt(clayDx * clayDx + clayDy * clayDy) < interactDistance) {
+        foundTarget = { nearNpcId: 'clay_pile', interactEnabled: true, interactTarget: { type: 'clay' } }
+      }
+    }
+
+    // 更新交互状态
+    if (foundTarget) {
+      this.setData(foundTarget)
+    } else {
+      this.setData({
+        nearNpcId: null,
+        interactEnabled: false,
+        interactTarget: null
+      })
+    }
   },
 
   // 检查NPC交互（到达目标后）
@@ -581,6 +783,7 @@ Page({
 
         // 已完成的任务
         if (tasks.maBingComplete && npc.task === 'wheat') {
+          this.setData({ pendingRewardTaskId: 'maBing' })
           this.showDialog({
             name: npc.name,
             dialog: ['谢谢你帮我收集小麦！', '这是你的奖励，以后常来玩哦！']
@@ -589,14 +792,16 @@ Page({
         }
 
         if (tasks.xiuNiangComplete && npc.task === 'memory') {
+          this.setData({ pendingRewardTaskId: 'xiuNiang' })
           this.showDialog({
             name: npc.name,
-            dialog: ['记忆游戏很有趣吧？', '欢迎再来玩！']
+            dialog: ['记忆游戏很有趣吧？', '这是你的奖励，欢迎再来玩！']
           })
           return
         }
 
         if (tasks.baiCiComplete && npc.task === 'clay') {
+          this.setData({ pendingRewardTaskId: 'baiCi' })
           this.showDialog({
             name: npc.name,
             dialog: ['谢谢你帮我收集粘土！', '这是你的奖励，以后常来玩哦！']
@@ -641,6 +846,13 @@ Page({
   // 关闭对话框
   closeDialog() {
     this.setData({ dialogVisible: false })
+
+    // 检查是否有待显示的奖励
+    if (this.data.pendingRewardTaskId) {
+      const taskId = this.data.pendingRewardTaskId
+      this.setData({ pendingRewardTaskId: null })
+      this.showReward(taskId)
+    }
   },
 
   // 收集小麦
@@ -679,20 +891,20 @@ Page({
   showReward(taskId) {
     const rewards = {
       maBing: {
-        desc: '乡村特色麻饼优惠券',
-        qrCodeUrl: '/assets/qr/ma_bing_qr.png'
+        desc: '消费券',
+        qrCodeUrl: '/assets/qr/1.png'
       },
       xiuNiang: {
-        desc: '手工刺绣体验券',
-        qrCodeUrl: '/assets/qr/xiu_niang_qr.png'
+        desc: '消费券',
+        qrCodeUrl: '/assets/qr/2.png'
       },
       baiCi: {
-        desc: '白瓷制作体验券',
-        qrCodeUrl: '/assets/qr/bai_ci_qr.png'
+        desc: '消费券',
+        qrCodeUrl: '/assets/qr/3.png'
       }
     }
 
-    const reward = rewards[taskId] || { desc: '奖励', qrCodeUrl: '' }
+    const reward = rewards[taskId] || { desc: '消费券', qrCodeUrl: '/assets/qr/1.png' }
 
     this.setData({
       qrPopupVisible: true,

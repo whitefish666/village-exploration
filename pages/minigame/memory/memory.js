@@ -1,12 +1,14 @@
 // 记忆游戏页面
 const gameData = require('../../../utils/gameData.js')
+const audioManager = require('../../../utils/audioManager.js')
+const CDN = 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com'
 
 Page({
   data: {
     patterns: [
-      { id: 0, icon: '/assets/戏曲/上.png', active: false, matched: false },
-      { id: 1, icon: '/assets/戏曲/中.png', active: false, matched: false },
-      { id: 2, icon: '/assets/戏曲/下.png', active: false, matched: false }
+      { id: 0, icon: `${CDN}/asset/game/opera/top.png`, active: false, matched: false },
+      { id: 1, icon: `${CDN}/asset/game/opera/middle.png`, active: false, matched: false },
+      { id: 2, icon: `${CDN}/asset/game/opera/bottom.png`, active: false, matched: false }
     ],
     gameState: 'idle', // idle, showing, input, ended
     sequence: [],
@@ -26,9 +28,9 @@ Page({
   resetGame() {
     this.setData({
       patterns: [
-        { id: 0, icon: '/assets/戏曲/上.png', active: false, matched: false },
-        { id: 1, icon: '/assets/戏曲/中.png', active: false, matched: false },
-        { id: 2, icon: '/assets/戏曲/下.png', active: false, matched: false }
+        { id: 0, icon: `${CDN}/asset/game/opera/top.png`, active: false, matched: false },
+        { id: 1, icon: `${CDN}/asset/game/opera/middle.png`, active: false, matched: false },
+        { id: 2, icon: `${CDN}/asset/game/opera/bottom.png`, active: false, matched: false }
       ],
       gameState: 'idle',
       sequence: [],
@@ -41,6 +43,8 @@ Page({
   },
 
   startGame() {
+    // 播放按钮音效
+    audioManager.playButton()
     this.resetGame()
     this.setData({ gameState: 'showing' })
 
@@ -157,6 +161,8 @@ Page({
   },
 
   goBack() {
+    // 播放按钮音效
+    audioManager.playButton()
     wx.redirectTo({ url: '/pages/index/index' })
   },
 

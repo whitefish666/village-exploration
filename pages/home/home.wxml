@@ -3,12 +3,12 @@
   <!-- 左侧：标题区域 -->
   <view class="left-section">
     <view class="header">
-      <text class="title">🏘️ 乡村探索</text>
+      <text class="title">🏘️ 匠心行</text>
       <text class="subtitle">乡村振兴主题横版探索游戏</text>
     </view>
 
     <view class="profile-section">
-      <text class="welcome-text">欢迎来到乡村探索</text>
+      <text class="welcome-text">欢迎来到匠心行</text>
       <text class="desc-text">点击下方开始按钮进入游戏</text>
     </view>
   </view>

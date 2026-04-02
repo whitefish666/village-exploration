@@ -1,8 +1,11 @@
 // 麦田小游戏页面
 const gameData = require('../../../utils/gameData.js')
+const CDN = 'https://village-game-assets-1418646126.cos.ap-shanghai.myqcloud.com'
 
 Page({
   data: {
+    // CDN常量
+    CDN: CDN,
     wheatItems: [],      // 麦穗列表
     collected: 0,       // 已收集
     total: 0,           // 总数

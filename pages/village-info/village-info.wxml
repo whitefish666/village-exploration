@@ -1,0 +1,62 @@
+<!-- 村庄介绍页面 -->
+<view class="container">
+  <!-- 顶部标题栏 -->
+  <view class="header">
+    <text class="title">🌾 匠心行介绍</text>
+    <text class="subtitle">探索乡村振兴的特色与发展</text>
+  </view>
+
+  <!-- 内容区域 -->
+  <scroll-view class="content" scroll-y>
+    <!-- 村庄概览 -->
+    <view class="section">
+      <view class="section-title">村庄概览</view>
+      <view class="card">
+        <text class="card-text">这里将被建设成宜居、宜业、宜游的美丽乡村...</text>
+      </view>
+    </view>
+
+    <!-- 特色产业 -->
+    <view class="section">
+      <view class="section-title">特色产业</view>
+      <view class="cards-row">
+        <view class="card small">
+          <text class="card-icon">🌾</text>
+          <text class="card-label">小麦种植</text>
+        </view>
+        <view class="card small">
+          <text class="card-icon">🥮</text>
+          <text class="card-label">传统麻饼</text>
+        </view>
+        <view class="card small">
+          <text class="card-icon">🏺</text>
+          <text class="card-label">陶艺制作</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 民俗文化 -->
+    <view class="section">
+      <view class="section-title">民俗文化</view>
+      <view class="card">
+        <text class="card-text">传承千年的手工艺与民俗活动...</text>
+      </view>
+    </view>
+
+    <!-- 旅游资源 -->
+    <view class="section">
+      <view class="section-title">旅游资源</view>
+      <view class="card">
+        <text class="card-text">自然风光与人文景观交相辉映...</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部导航 -->
+  <view class="bottom-bar">
+    <view class="back-btn" bindtap="goBack">
+      <text class="back-icon">←</text>
+      <text class="back-text">返回</text>
+    </view>
+  </view>
+</view>

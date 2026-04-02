@@ -17,10 +17,8 @@ Page({
   },
 
   goToIntro() {
-    wx.showToast({
-      title: '暂未开放',
-      icon: 'none',
-      duration: 1500
+    wx.navigateTo({
+      url: '/pages/village-info/village-info'
     })
   }
 })
